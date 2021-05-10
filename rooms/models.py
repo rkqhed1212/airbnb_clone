@@ -2,7 +2,7 @@ from django.db import models
 from django_countries.fields import CountryField
 from core import models as core_models
 from users import models as user_models
-# Create your models here.
+from django.urls import reverse
 
 class AbstractItem(core_models.TimeStampedModel):
 
@@ -16,7 +16,6 @@ class AbstractItem(core_models.TimeStampedModel):
 
 class RoomType(AbstractItem):
     
-
     class Meta:
         verbose_name_plural = "Room Type"
         ordering = ['created']  
@@ -56,7 +55,7 @@ class Room(core_models.TimeStampedModel):
     beds = models.IntegerField()
     bedrooms = models.IntegerField()
     baths = models.IntegerField()
-    guest = models.IntegerField()
+    guest = models.IntegerField(help_text = "How many people will be staying?")
     check_in = models.TimeField()
     check_out = models.TimeField()
     instant_book = models.BooleanField(default=True)
@@ -75,6 +74,8 @@ class Room(core_models.TimeStampedModel):
         self.city = str.capitalize(self.city)
         super().save(*args, **kwargs)
 
+    def get_absolute_url(self):
+        return reverse("rooms:detail", kwargs= {'pk': self.pk})
 
     def total_rating(self):
         all_reviews = self.reviews.all()
