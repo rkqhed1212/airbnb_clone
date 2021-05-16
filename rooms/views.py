@@ -1,23 +1,26 @@
-from django_countries import countries
-from django.views.generic import ListView, DetailView
-from . import models, forms 
-from django.shortcuts import render
+
+from django.http import Http404
+from django.views.generic import ListView, DetailView, View, UpdateView, FormView
+from django.shortcuts import render, redirect, reverse
+from django.core.paginator import Paginator
+from . import models, forms
+
 
 class HomeView(ListView):
 
     model = models.Room
-    paginate_by = 10
+    paginate_by = 12
     paginate_orphans = 5
     ordering = "created"
-    page_kwarg = "rooms"
+    context_object_name = "rooms"
 
 
 class RoomDetail(DetailView):
 
     model = models.Room
 
-
 class SearchView(View):
+
     def get(self, request):
 
         country = request.GET.get("country")
@@ -27,7 +30,7 @@ class SearchView(View):
             form = forms.SearchForm(request.GET)
 
             if form.is_valid():
-                
+
                 city = form.cleaned_data.get("city")
                 country = form.cleaned_data.get("country")
                 room_type = form.cleaned_data.get("room_type")
@@ -40,7 +43,6 @@ class SearchView(View):
                 superhost = form.cleaned_data.get("superhost")
                 amentities = form.cleaned_data.get("amentities")
                 facilities = form.cleaned_data.get("facilities")
-
 
                 filter_args = {}
 
@@ -72,15 +74,27 @@ class SearchView(View):
 
                 if superhost is True:
                     filter_args["host__superhost"] = True
-
+        
                 for amenity in amentities:
-                    filter_args["amenities"] = amenity
+                    filter_args["amentities"] = amenity
 
                 for facility in facilities:
                     filter_args["facilities"] = facility
 
-                rooms = models.Room.objects.filter(**filter_args)
-        else:
-            form = forms.SearchForm()
+                qs = models.Room.objects.filter(**filter_args).order_by("-created")
 
-        return render(request, "rooms/search.html", {"form": form, "rooms":rooms})
+                paginator = Paginator(qs, 10, orphans=5)
+
+                page = request.GET.get("page", 1)
+
+                rooms = paginator.get_page(page)
+        
+                return render(request, "rooms/search.html", {"form":form,"rooms":rooms })
+        else:
+
+            form = forms.SearchForm()
+            
+        return render(request, "rooms/search.html", {"form":form })
+
+
+

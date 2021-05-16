@@ -4,16 +4,23 @@ from . import models
 
 class SearchForm(forms.Form):
 
-    city = forms.CharField(initial="Anywhere",)
+    city = forms.CharField(initial="Anywhere")
     country = CountryField(default="KR").formfield()
-    price = forms.IntegerField(required=True)
-    room_type = forms.ModelChoiceField(empty_label = "Any kind", queryset=models.RoomType.objects.all(),required=False)
     price = forms.IntegerField(required=False)
+    room_type = forms.ModelChoiceField(
+        required=False, empty_label="Any kind", queryset=models.RoomType.objects.all()
+    )
     guests = forms.IntegerField(required=False)
     bedrooms = forms.IntegerField(required=False)
     beds = forms.IntegerField(required=False)
-    baths  = forms.IntegerField(required=False)
+    baths = forms.IntegerField(required=False)
     instant_book = forms.BooleanField(required=False)
     superhost = forms.BooleanField(required=False)
-    amentities = forms.ModelMultipleChoiceField(required=False, queryset=models.Amentity.objects.all(), widget=forms.CheckboxSelectMultiple)
-    facilities = forms.ModelMultipleChoiceField(required=False, queryset=models.Facilitiy.objects.all(), widget=forms.CheckboxSelectMultiple)
+    amentities = forms.ModelMultipleChoiceField(
+        required=False, 
+        queryset=models.Amentity.objects.all(), 
+        widget=forms.CheckboxSelectMultiple)
+    facilities = forms.ModelMultipleChoiceField(
+        required=False, 
+        queryset=models.Facilitiy.objects.all(), 
+        widget=forms.CheckboxSelectMultiple)
