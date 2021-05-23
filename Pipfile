@@ -9,6 +9,9 @@ pylint = "*"
 pillow = "*"
 django-countries = "*"
 django-seed = "*"
+django-dotenv = "*"
+django-environ = "*"
+requests = "*"
 
 [dev-packages]
 flake8 = "*"
