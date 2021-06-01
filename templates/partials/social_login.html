@@ -1,9 +1,9 @@
-<div>
-    <a href="{% url 'users:github_login' %}">
-    Continue with Github
+<div class="flex flex-col w-full">
+    <a href="{% url 'users:github_login' %}" class="w-full border-2 border font-medium text-gray-700 mb-2 border-gray-700 text-center rounded-sm py-5">
+        <i class="fab fa-github"></i>Continue with Github
     </a>
-    <a href="{% url 'users:kakao_login' %}">
-    Continue with KaKao
+    <a href="{% url 'users:kakao_login' %}" class="w-full border font-medium text-white-800 mb-2 border-yellow-400 text-center rounded-sm py-5 bg-yellow-400 ">
+        <i class="fas fa-comment mr-2 fa-lg"></i> Continue with KaKao
     </a>
 
 </div>
