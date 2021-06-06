@@ -2,6 +2,7 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 import uuid 
 from django.conf import settings
+from django.shortcuts import reverse
 from django.core.mail import send_mail
 
 # Create your models here.
@@ -57,6 +58,9 @@ class User(AbstractUser):
         max_length=50, choices=LOGIN_CHOICES, default=LOGIN_EMAIL
     )
 
+    def get_absolute_url(self):
+        return reverse("users:profile", kwargs={"pk": self.pk})
+
     def verify_email(self):
          if self.email_verified is False:
             secret = uuid.uuid4().hex[:20]
@@ -69,3 +73,6 @@ class User(AbstractUser):
                 fail_silently=False,
             )
             return
+
+
+
